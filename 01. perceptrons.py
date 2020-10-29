@@ -1,4 +1,4 @@
-from random import randrange
+import random
 import pygame
 import numpy as np
 
@@ -79,16 +79,20 @@ numbers_matrix = [
     ]
 ]
 
+
 class Perceptron(object):
     def __init__(self, no_of_inputs, learning_rate=0.01, iterations=100):
         self.iterations = iterations
         self.learning_rate = learning_rate
         self.no_of_inputs = no_of_inputs
-        self.weights = np.zeros(self.no_of_inputs + 1) # ZADANIE DOMOWE A
+        self.weights = np.random.rand(self.no_of_inputs + 1)/100
 
     def train(self, training_data, labels):
         for _ in range(self.iterations):
-            for input, label in zip(training_data, labels): # LOSOWOŚĆ - ZADANIE DOMOWE 2
+            random_list = list(zip(training_data, labels))
+            random.shuffle(random_list)
+            training_data, labels = zip(*random_list)
+            for input, label in zip(training_data, labels):
                 # ZADANIE DOMOWE 3 - PLA
                 # ZADANIE DOMOWE 4 - RATCHET RPLA
                 # ZADANIE DOMOTE 5 - GUI: czyszczenie, 0-9, negacja, randomowe zmienianie bitów, przesuwanie do góry, dół, prawo, lewo
@@ -221,7 +225,7 @@ def main():
                             values[row_int][col_int] = values[row_int][col_int]*(-1) + 1
                             draw_squares(squares, screen, values)
                             draw_buttons(buttons, screen)
-                        col_int +=1
+                        col_int += 1
                     row_int += 1
                 for row in buttons:
                     for button in row:
@@ -233,10 +237,11 @@ def main():
                             elif button.text == 'clear':
                                 values = np.zeros((5, 5))
                             elif button.text == 'random':
-                                values = np.zeros((5, 5))
                                 for i in range(len(values)):
                                     for j in range(len(values[i])):
-                                        values[i][j] = randrange(2)
+                                        r = random.randrange(20)
+                                        if r < 1:
+                                            values[i][j] = values[i][j]*(-1) + 1
                             elif button.text == 'up':
                                 for i in range(len(values)-1):
                                     first_row = np.asarray(values[i]).copy()
