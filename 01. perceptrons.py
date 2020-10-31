@@ -81,24 +81,90 @@ numbers_matrix = [
 
 
 class Perceptron(object):
-    def __init__(self, no_of_inputs, learning_rate=0.01, iterations=100):
+    def __init__(self, no_of_inputs, learning_rate=0.01, iterations=1000):
         self.iterations = iterations
         self.learning_rate = learning_rate
         self.no_of_inputs = no_of_inputs
-        self.weights = np.random.rand(self.no_of_inputs + 1)/100
+        self.weights = np.random.rand(self.no_of_inputs + 1)/10
 
-    def train(self, training_data, labels):
+    def train_SPLA(self, training_data, labels):
         for _ in range(self.iterations):
             random_list = list(zip(training_data, labels))
             random.shuffle(random_list)
             training_data, labels = zip(*random_list)
             for input, label in zip(training_data, labels):
-                # ZADANIE DOMOWE 3 - PLA
-                # ZADANIE DOMOWE 4 - RATCHET RPLA
-                # ZADANIE DOMOTE 5 - GUI: czyszczenie, 0-9, negacja, randomowe zmienianie bitów, przesuwanie do góry, dół, prawo, lewo
-                prediction = self.output(input)
-                self.weights[1:] += self.learning_rate * (label - prediction) * input
-                self.weights[0] += self.learning_rate * (label - prediction)
+                input_copy = self.noisy(input)
+                prediction = self.output(input_copy)
+                error = label - prediction
+                if error != 0.0:
+                    self.weights[1:] += self.learning_rate * (label - prediction) * input_copy
+                    self.weights[0] += self.learning_rate * (label - prediction)
+
+    def train_PLA(self, training_data, labels):
+        life = 0
+        leader = np.asarray(self.weights).copy()
+        leader_life = 0
+        for _ in range(self.iterations):
+            random_list = list(zip(training_data, labels))
+            random.shuffle(random_list)
+            training_data, labels = zip(*random_list)
+            for input, label in zip(training_data, labels):
+                input_copy = self.noisy(input)
+                prediction = self.output(input_copy)
+                error = label - prediction
+                if error != 0.0:
+                    if life > leader_life:
+                        leader = np.asarray(self.weights).copy()
+                        leader_life = life
+                    self.weights[1:] += self.learning_rate * (label - prediction) * input_copy
+                    self.weights[0] += self.learning_rate * (label - prediction)
+                    life = 0
+                else:
+                    life += 1
+
+        if life > leader_life:
+            leader = np.asarray(self.weights).copy()
+            leader_life = life
+
+        self.weights = np.asarray(leader).copy()
+
+    def train_RPLA(self, training_data, labels):
+        life = 0
+        leader = np.asarray(self.weights).copy()
+        leader_life = 0
+        for _ in range(self.iterations):
+            random_list = list(zip(training_data, labels))
+            random.shuffle(random_list)
+            training_data, labels = zip(*random_list)
+            for input, label in zip(training_data, labels):
+                input_copy = self.noisy(input)
+                prediction = self.output(input_copy)
+                error = label - prediction
+                if error != 0.0:
+                    if life > leader_life:
+                        old_correct = 0
+                        new_correct = 0
+                        for input_check, label_check in zip(training_data, labels):
+                            old_prediction = self.output(input_check)
+                            new_prediction = self.output(input_check)
+                            if label-old_prediction == 0.0:
+                                old_correct += 1
+                            if label-new_prediction == 0.0:
+                                new_correct += 1
+                        if new_correct > old_correct:
+                            leader = np.asarray(self.weights).copy()
+                            leader_life = life
+                    self.weights[1:] += self.learning_rate * (label - prediction) * input_copy
+                    self.weights[0] += self.learning_rate * (label - prediction)
+                    life = 0
+                else:
+                    life += 1
+
+        if life > leader_life:
+            leader = np.asarray(self.weights).copy()
+            leader_life = life
+
+        self.weights = np.asarray(leader).copy()
 
     def output(self, input):
         summation = np.dot(input, self.weights[1:]) + self.weights[0]
@@ -107,6 +173,18 @@ class Perceptron(object):
         else:
             activation = 0
         return activation
+
+    def noisy(self, input):
+        copy = np.asarray(input).copy()
+        number_of_changes = np.random.randint(0, 3)
+        changed_cells = []
+        for _ in range(number_of_changes):
+            cell = np.random.randint(0, 24)
+            while cell in changed_cells:
+                cell = np.random.randint(0, 24)
+            copy[cell] = input[cell]*(-1) + 1
+
+        return copy
 
 
 class Button(object):
@@ -188,28 +266,67 @@ def draw_buttons(buttons, screen):
 
 
 def main():
-    size = width, height = 310, 590
-    screen = pygame.display.set_mode(size)
-    squares = []
-    values = np.zeros((5, 5))
-    buttons = []
-    create_squares(squares)
-    draw_squares(squares, screen, values)
-    create_buttons(buttons)
-    draw_buttons(buttons, screen)
-
+    main_size = width, height = 310, 590
+    choose_size = 310, 70
     training_inputs = [np.ravel(n) for n in numbers_matrix]
     perceptrons = []
 
     for _ in range(10):
-        perceptrons.append(Perceptron(5*5))
+        perceptrons.append(Perceptron(5 * 5))
 
-    for i in range(10):
-        labels = np.zeros(10)
-        labels[i] = 1
-        perceptrons[i].train(training_inputs, labels)
 
+    choose_algorithm_screen = pygame.display.set_mode(choose_size)
+    buttons = []
+    row = []
+    row.append(Button(10, 10, 90, text="SPLA"))
+    row.append(Button(110, 10, 90, text="PLA"))
+    row.append(Button(210, 10, 90, text="RPLA"))
+    buttons.append(row)
+    draw_buttons(buttons, choose_algorithm_screen)
+    choosing = True
     running = True
+    while choosing:
+        for event in pygame.event.get():
+            mouse = pygame.mouse.get_pos()
+            if event.type == pygame.QUIT:
+                choosing = False
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                for button in buttons[0]:
+                    if button.was_clicked(mouse[0], mouse[1]):
+                        if button.text == "SPLA":
+                            for i in range(10):
+                                labels = np.zeros(10)
+                                labels[i] = 1
+                                perceptrons[i].train_SPLA(training_inputs, labels)
+                        elif button.text == "PLA":
+                            for i in range(10):
+                                labels = np.zeros(10)
+                                labels[i] = 1
+                                perceptrons[i].train_PLA(training_inputs, labels)
+                        elif button.text == "RPLA":
+                            for i in range(10):
+                                labels = np.zeros(10)
+                                labels[i] = 1
+                                perceptrons[i].train_RPLA(training_inputs, labels)
+                        choosing = False
+
+
+
+
+    buttons = []
+    squares = []
+    values = np.zeros((5, 5))
+    main_screen = pygame.display.set_mode(main_size)
+    create_squares(squares)
+    draw_squares(squares, main_screen, values)
+    create_buttons(buttons)
+    draw_buttons(buttons, main_screen)
+
+
+
+
+
 
     while running:
         for event in pygame.event.get():
@@ -223,8 +340,8 @@ def main():
                     for square in row:
                         if square.was_clicked(mouse[0], mouse[1]):
                             values[row_int][col_int] = values[row_int][col_int]*(-1) + 1
-                            draw_squares(squares, screen, values)
-                            draw_buttons(buttons, screen)
+                            draw_squares(squares, main_screen, values)
+                            draw_buttons(buttons, main_screen)
                         col_int += 1
                     row_int += 1
                 for row in buttons:
@@ -269,8 +386,8 @@ def main():
 
                 buttons[6][0].text = 'result: ' + output
 
-                draw_squares(squares, screen, values)
-                draw_buttons(buttons, screen)
+                draw_squares(squares, main_screen, values)
+                draw_buttons(buttons, main_screen)
 
 
 if __name__ == "__main__":
