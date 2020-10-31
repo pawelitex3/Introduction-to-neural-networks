@@ -1,6 +1,7 @@
 import random
 import pygame
 import numpy as np
+import matplotlib.pyplot as mpl
 
 pygame.init()
 
@@ -151,14 +152,14 @@ numbers_matrix = [
 
 
 class Perceptron(object):
-    def __init__(self, no_of_inputs, learning_rate=0.01, iterations=2500):
+    def __init__(self, no_of_inputs, learning_rate=0.001, iterations=1500):
         self.iterations = iterations
         self.learning_rate = learning_rate
         self.no_of_inputs = no_of_inputs
         self.weights = np.random.rand(self.no_of_inputs + 1)
 
     def train_SPLA(self, training_data, labels):
-        for _ in range(self.iterations):
+        for i in range(self.iterations):
             random_list = list(zip(training_data, labels))
             random.shuffle(random_list)
             training_data, labels = zip(*random_list)
@@ -172,9 +173,9 @@ class Perceptron(object):
 
     def train_PLA(self, training_data, labels):
         life = 0
-        leader = np.asarray(self.weights).copy()
+        leader = np.copy(self.weights)
         leader_life = 0
-        for _ in range(self.iterations):
+        for i in range(self.iterations):
             random_list = list(zip(training_data, labels))
             random.shuffle(random_list)
             training_data, labels = zip(*random_list)
@@ -184,7 +185,7 @@ class Perceptron(object):
                 error = label - prediction
                 if error != 0.0:
                     if life > leader_life:
-                        leader = np.asarray(self.weights).copy()
+                        leader = np.copy(self.weights)
                         leader_life = life
                     self.weights[1:] += self.learning_rate * (label - prediction) * input_copy
                     self.weights[0] += self.learning_rate * (label - prediction)
@@ -193,16 +194,15 @@ class Perceptron(object):
                     life += 1
 
         if life > leader_life:
-            leader = np.asarray(self.weights).copy()
-            leader_life = life
+            leader = np.copy(self.weights)
 
-        self.weights = np.asarray(leader).copy()
+        self.weights = np.copy(leader)
 
     def train_RPLA(self, training_data, labels):
         life = 0
-        leader = np.asarray(self.weights).copy()
+        leader = self.weights
         leader_life = 0
-        for _ in range(self.iterations):
+        for i in range(self.iterations):
             random_list = list(zip(training_data, labels))
             random.shuffle(random_list)
             training_data, labels = zip(*random_list)
@@ -222,7 +222,7 @@ class Perceptron(object):
                             if label-new_prediction == 0.0:
                                 new_correct += 1
                         if new_correct > old_correct:
-                            leader = np.asarray(self.weights).copy()
+                            leader = np.copy(self.weights)
                             leader_life = life
                     self.weights[1:] += self.learning_rate * (label - prediction) * input_copy
                     self.weights[0] += self.learning_rate * (label - prediction)
@@ -231,10 +231,9 @@ class Perceptron(object):
                     life += 1
 
         if life > leader_life:
-            leader = np.asarray(self.weights).copy()
-            leader_life = life
+            leader = np.copy(self.weights)
 
-        self.weights = np.asarray(leader).copy()
+        self.weights = np.copy(leader)
 
     def output(self, input):
         summation = np.dot(input, self.weights[1:]) + self.weights[0]
@@ -245,14 +244,11 @@ class Perceptron(object):
         return activation
 
     def noisy(self, input):
-        copy = np.asarray(input).copy()
-        number_of_changes = np.random.randint(0, 3)
-        changed_cells = []
-        for _ in range(number_of_changes):
-            cell = np.random.randint(0, 24)
-            while cell in changed_cells:
-                cell = np.random.randint(0, 24)
-            copy[cell] = input[cell]*(-1) + 1
+        copy = np.copy(input)
+        number_of_changes = random.randint(0, 2)
+        cells = random.sample(range(25), number_of_changes)
+        for i in cells:
+            copy[i] = input[i]*(-1) + 1
 
         return copy
 
@@ -310,7 +306,7 @@ def create_buttons(buttons):
     row.append(Button(210, 510, 90, 30, 'right'))
     buttons.append(row)
     row = []
-    row.append(Button(10, 550, 290, 30, ''))
+    row.append(Button(10, 550, 290, 30, 'result: '))
     buttons.append(row)
 
 
@@ -387,22 +383,15 @@ def main():
                                 perceptrons[i % 10].train_RPLA(training_inputs, labels)
                         choosing = False
 
-
-
-
     buttons = []
     squares = []
     values = np.zeros((5, 5))
-    main_screen = pygame.display.set_mode(main_size)
-    create_squares(squares)
-    draw_squares(squares, main_screen, values)
-    create_buttons(buttons)
-    draw_buttons(buttons, main_screen)
-
-
-
-
-
+    if running:
+        main_screen = pygame.display.set_mode(main_size)
+        create_squares(squares)
+        draw_squares(squares, main_screen, values)
+        create_buttons(buttons)
+        draw_buttons(buttons, main_screen)
 
     while running:
         for event in pygame.event.get():
@@ -425,11 +414,13 @@ def main():
                         if button.was_clicked(mouse[0], mouse[1]):
                             if button.text in numbers:
                                 if button.version == 1:
-                                    values = np.asarray(numbers_matrix[int(button.text)])
+                                    values = np.copy(numbers_matrix[int(button.text)])
                                 else:
-                                    values = np.asarray(numbers_matrix[int(button.text) + 10])
+                                    values = np.copy(numbers_matrix[int(button.text) + 10])
+                                #mpl.imshow(np.reshape(perceptrons[int(button.text)].weights[1:], (5, 5)))
+                                #mpl.show()
                             elif button.text == 'negation':
-                                values = np.asarray(values) * (-1) + 1
+                                values = np.copy(values) * (-1) + 1
                             elif button.text == 'clear':
                                 values = np.zeros((5, 5))
                             elif button.text == 'random':
@@ -440,11 +431,11 @@ def main():
                                             values[i][j] = values[i][j]*(-1) + 1
                             elif button.text == 'up':
                                 for i in range(len(values)-1):
-                                    first_row = np.asarray(values[i]).copy()
+                                    first_row = np.copy(values[i])
                                     values[i], values[i+1] = values[i+1], first_row
                             elif button.text == 'down':
                                 for i in range(len(values)-1, 0, -1):
-                                    last_row = np.asarray(values[i]).copy()
+                                    last_row = np.copy(values[i])
                                     values[i], values[i-1] = values[i-1], last_row
                             elif button.text == 'left':
                                 for i in range(len(values)):
