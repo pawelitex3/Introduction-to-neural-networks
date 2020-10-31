@@ -76,16 +76,86 @@ numbers_matrix = [
         [1.0, 1.0, 1.0, 1.0, 1.0],
         [0.0, 0.0, 0.0, 0.0, 1.0],
         [1.0, 1.0, 1.0, 1.0, 1.0]
+    ],
+    [
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0]
+    ],
+    [
+        [0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 1.0, 1.0]
+    ],
+    [
+        [1.0, 1.0, 1.0, 1.0, 1.0],
+        [0.0, 0.0, 0.0, 0.0, 1.0],
+        [1.0, 1.0, 1.0, 1.0, 1.0],
+        [1.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 1.0, 1.0]
+    ],
+    [
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0]
+    ],
+    [
+        [0.0, 0.0, 1.0, 0.0, 0.0],
+        [0.0, 1.0, 1.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 1.0, 1.0],
+        [0.0, 0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0, 0.0]
+    ],
+    [
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0]
+    ],
+    [
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0]
+    ],
+    [
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 1.0, 1.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0]
+    ],
+    [
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0]
+    ],
+    [
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0]
     ]
 ]
 
 
 class Perceptron(object):
-    def __init__(self, no_of_inputs, learning_rate=0.01, iterations=1000):
+    def __init__(self, no_of_inputs, learning_rate=0.01, iterations=2500):
         self.iterations = iterations
         self.learning_rate = learning_rate
         self.no_of_inputs = no_of_inputs
-        self.weights = np.random.rand(self.no_of_inputs + 1)/10
+        self.weights = np.random.rand(self.no_of_inputs + 1)
 
     def train_SPLA(self, training_data, labels):
         for _ in range(self.iterations):
@@ -188,12 +258,13 @@ class Perceptron(object):
 
 
 class Button(object):
-    def __init__(self, x, y, width=50, height=50, text=''):
+    def __init__(self, x, y, width=50, height=50, text='', version=1):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.text = text
+        self.version = version
 
     def was_clicked(self, x, y):
         return (self.x < x < self.x+self.width) and (self.y < y < self.y+self.height)
@@ -217,12 +288,14 @@ def create_buttons(buttons):
         x = 10
         y = 310 + i*40
         for j in range(3):
-            row.append(Button(x, y, 90, 30, str(number)))
+            row.append(Button(x, y, 40, 30, str(number)))
+            row.append(Button(x+50, y, 40, 30, str(number), 2))
             x += 100
             number += 1
         buttons.append(row)
     row = []
-    row.append(Button(10, 430, 90, 30, '0'))
+    row.append(Button(10, 430, 40, 30, '0'))
+    row.append(Button(60, 430, 40, 30, '0', 2))
     row.append(Button(110, 430, 90, 30, 'clear'))
     row.append(Button(210, 430, 90, 30, 'random'))
     buttons.append(row)
@@ -295,20 +368,23 @@ def main():
                 for button in buttons[0]:
                     if button.was_clicked(mouse[0], mouse[1]):
                         if button.text == "SPLA":
-                            for i in range(10):
-                                labels = np.zeros(10)
-                                labels[i] = 1
-                                perceptrons[i].train_SPLA(training_inputs, labels)
+                            for i in range(20):
+                                labels = np.zeros(20)
+                                labels[i % 10] = 1
+                                labels[i % 10 + 10] = 1
+                                perceptrons[i % 10].train_SPLA(training_inputs, labels)
                         elif button.text == "PLA":
-                            for i in range(10):
-                                labels = np.zeros(10)
-                                labels[i] = 1
-                                perceptrons[i].train_PLA(training_inputs, labels)
+                            for i in range(20):
+                                labels = np.zeros(20)
+                                labels[i % 10] = 1
+                                labels[i % 10 + 10] = 1
+                                perceptrons[i % 10].train_PLA(training_inputs, labels)
                         elif button.text == "RPLA":
-                            for i in range(10):
-                                labels = np.zeros(10)
-                                labels[i] = 1
-                                perceptrons[i].train_RPLA(training_inputs, labels)
+                            for i in range(20):
+                                labels = np.zeros(20)
+                                labels[i % 10] = 1
+                                labels[i % 10 + 10] = 1
+                                perceptrons[i % 10].train_RPLA(training_inputs, labels)
                         choosing = False
 
 
@@ -348,7 +424,10 @@ def main():
                     for button in row:
                         if button.was_clicked(mouse[0], mouse[1]):
                             if button.text in numbers:
-                                values = np.asarray(numbers_matrix[int(button.text)])
+                                if button.version == 1:
+                                    values = np.asarray(numbers_matrix[int(button.text)])
+                                else:
+                                    values = np.asarray(numbers_matrix[int(button.text) + 10])
                             elif button.text == 'negation':
                                 values = np.asarray(values) * (-1) + 1
                             elif button.text == 'clear':
