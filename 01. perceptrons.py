@@ -354,7 +354,10 @@ def create_buttons(buttons):
             number += 1
         buttons.append(row)
     row = []
-    row.append(Button(10, 630, 290, 30, 'result: '))
+    row.append(Button(10, 630, 290, 30, 'train', version=3))
+    buttons.append(row)
+    row = []
+    row.append(Button(10, 670, 290, 30, 'result: '))
     buttons.append(row)
 
 
@@ -372,7 +375,10 @@ def draw_squares(squares, screen, values):
 def draw_buttons(buttons, screen):
     for row in buttons:
         for button in row:
-            pygame.draw.rect(screen, (180, 180, 180), (button.x, button.y, button.width, button.height), 0)
+            if button.version == 3:
+                pygame.draw.rect(screen, (30, 160, 60), (button.x, button.y, button.width, button.height), 0)
+            else:
+                pygame.draw.rect(screen, (180, 180, 180), (button.x, button.y, button.width, button.height), 0)
             font = pygame.font.SysFont('verdana', 20)
             text = font.render(button.text, 1, (0, 0, 0))
             x = button.x + button.width/2 - text.get_width()/2
@@ -383,7 +389,7 @@ def draw_buttons(buttons, screen):
 
 
 def main():
-    main_size = width, height = 310, 670
+    main_size = width, height = 310, 710
     choose_size = 310, 70
     training_inputs = [np.ravel(n) for n in numbers_matrix]
     perceptrons = []
@@ -512,6 +518,9 @@ def main():
                                     name = str(i) + '.png'
                                     mpl.imshow(np.reshape(perceptrons[i].weights[1:], (5, 5)))
                                     mpl.savefig(name)
+                            elif button.text == 'plot':
+                                for i in range(len(perceptrons)):
+                                    perceptrons[i].train(training_inputs, labels[i])
 
                 data_now = np.ravel(values)
                 output = ''
@@ -521,7 +530,7 @@ def main():
                             output += ', '
                         output += str(i)
 
-                buttons[8][0].text = 'result: ' + output
+                buttons[9][0].text = 'result: ' + output
 
                 draw_squares(squares, main_screen, values)
                 draw_buttons(buttons, main_screen)
