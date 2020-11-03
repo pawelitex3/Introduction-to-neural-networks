@@ -235,6 +235,43 @@ class Perceptron(object):
 
         self.weights = np.copy(leader)
 
+    def train(self, training_data, labels):
+        life = 0
+        leader = self.weights
+        leader_life = 0
+        for i in range(500):
+            random_list = list(zip(training_data, labels))
+            random.shuffle(random_list)
+            training_data, labels = zip(*random_list)
+            for input, label in zip(training_data, labels):
+                input_copy = self.noisy(input)
+                prediction = self.output(input_copy)
+                error = label - prediction
+                if error != 0.0:
+                    if life > leader_life:
+                        old_correct = 0
+                        new_correct = 0
+                        for input_check, label_check in zip(training_data, labels):
+                            old_prediction = self.output(input_check)
+                            new_prediction = self.output(input_check)
+                            if label-old_prediction == 0.0:
+                                old_correct += 1
+                            if label-new_prediction == 0.0:
+                                new_correct += 1
+                        if new_correct > old_correct:
+                            leader = np.copy(self.weights)
+                            leader_life = life
+                    self.weights[1:] += self.learning_rate * (label - prediction) * input_copy
+                    self.weights[0] += self.learning_rate * (label - prediction)
+                    life = 0
+                else:
+                    life += 1
+
+        if life > leader_life:
+            leader = np.copy(self.weights)
+
+        self.weights = np.copy(leader)
+
     def output(self, input):
         summation = np.dot(input, self.weights[1:]) + self.weights[0]
         if summation > 0:
@@ -298,7 +335,7 @@ def create_buttons(buttons):
     row = []
     row.append(Button(10, 470, 90, 30, 'negation'))
     row.append(Button(110, 470, 90, 30, 'up'))
-    row.append(Button(210, 470, 90, 30, ''))
+    row.append(Button(210, 470, 90, 30, 'plot'))
     buttons.append(row)
     row = []
     row.append(Button(10, 510, 90, 30, 'left'))
@@ -306,7 +343,18 @@ def create_buttons(buttons):
     row.append(Button(210, 510, 90, 30, 'right'))
     buttons.append(row)
     row = []
-    row.append(Button(10, 550, 290, 30, 'result: '))
+    number = 0
+    for i in range(2):
+        row = []
+        x = 10
+        y = 550 + i*40
+        for j in range(5):
+            row.append(Button(x, y, 50, 30, str(number), version=3))
+            x += 60
+            number += 1
+        buttons.append(row)
+    row = []
+    row.append(Button(10, 630, 290, 30, 'result: '))
     buttons.append(row)
 
 
@@ -335,7 +383,7 @@ def draw_buttons(buttons, screen):
 
 
 def main():
-    main_size = width, height = 310, 590
+    main_size = width, height = 310, 670
     choose_size = 310, 70
     training_inputs = [np.ravel(n) for n in numbers_matrix]
     perceptrons = []
@@ -347,6 +395,7 @@ def main():
     choose_algorithm_screen = pygame.display.set_mode(choose_size)
     buttons = []
     row = []
+    labels = []
     row.append(Button(10, 10, 90, text="SPLA"))
     row.append(Button(110, 10, 90, text="PLA"))
     row.append(Button(210, 10, 90, text="RPLA"))
@@ -365,22 +414,25 @@ def main():
                     if button.was_clicked(mouse[0], mouse[1]):
                         if button.text == "SPLA":
                             for i in range(20):
-                                labels = np.zeros(20)
-                                labels[i % 10] = 1
-                                labels[i % 10 + 10] = 1
-                                perceptrons[i % 10].train_SPLA(training_inputs, labels)
+                                lab = np.zeros(20)
+                                lab[i % 10] = 1
+                                lab[i % 10 + 10] = 1
+                                labels.append(lab)
+                                perceptrons[i % 10].train_SPLA(training_inputs, lab)
                         elif button.text == "PLA":
                             for i in range(20):
-                                labels = np.zeros(20)
-                                labels[i % 10] = 1
-                                labels[i % 10 + 10] = 1
-                                perceptrons[i % 10].train_PLA(training_inputs, labels)
+                                lab = np.zeros(20)
+                                lab[i % 10] = 1
+                                lab[i % 10 + 10] = 1
+                                labels.append(lab)
+                                perceptrons[i % 10].train_PLA(training_inputs, lab)
                         elif button.text == "RPLA":
                             for i in range(20):
-                                labels = np.zeros(20)
-                                labels[i % 10] = 1
-                                labels[i % 10 + 10] = 1
-                                perceptrons[i % 10].train_RPLA(training_inputs, labels)
+                                lab = np.zeros(20)
+                                lab[i % 10] = 1
+                                lab[i % 10 + 10] = 1
+                                labels.append(lab)
+                                perceptrons[i % 10].train_RPLA(training_inputs, lab)
                         choosing = False
 
     buttons = []
@@ -415,12 +467,22 @@ def main():
                             if button.text in numbers:
                                 if button.version == 1:
                                     values = np.copy(numbers_matrix[int(button.text)])
-                                else:
+                                elif button.version == 2:
                                     values = np.copy(numbers_matrix[int(button.text) + 10])
-                                #mpl.imshow(np.reshape(perceptrons[int(button.text)].weights[1:], (5, 5)))
-                                #mpl.show()
+                                elif button.version == 3:
+                                    for i in range(len(perceptrons)):
+                                        data_now = np.ravel(values)
+                                        training_inputs.append(data_now)
+
+                                        if int(button.text) == i:
+                                            labels[i] = np.append(labels[i], np.array([1]))
+                                        else:
+                                            labels[i] = np.append(labels[i], np.array([0]))
+
+                                        perceptrons[i].train(training_inputs, labels[i])
+
                             elif button.text == 'negation':
-                                values = np.copy(values) * (-1) + 1
+                                values = np.asarray(values) * (-1) + 1
                             elif button.text == 'clear':
                                 values = np.zeros((5, 5))
                             elif button.text == 'random':
@@ -445,6 +507,11 @@ def main():
                                 for i in range(len(values)):
                                     for j in range(len(values[i])-1, 0, -1):
                                         values[i][j], values[i][j-1] = values[i][j-1], values[i][j]
+                            elif button.text == 'plot':
+                                for i in range(len(perceptrons)):
+                                    name = str(i) + '.png'
+                                    mpl.imshow(np.reshape(perceptrons[i].weights[1:], (5, 5)))
+                                    mpl.savefig(name)
 
                 data_now = np.ravel(values)
                 output = ''
@@ -454,7 +521,7 @@ def main():
                             output += ', '
                         output += str(i)
 
-                buttons[6][0].text = 'result: ' + output
+                buttons[8][0].text = 'result: ' + output
 
                 draw_squares(squares, main_screen, values)
                 draw_buttons(buttons, main_screen)
