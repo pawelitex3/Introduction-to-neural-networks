@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pygame
 import random
+from termgraph import termgraph as tg
+from os import system
 
 pygame.init()
 
@@ -11,94 +13,124 @@ numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 numbers_matrix = [
     [
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
-        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
-        [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
-        [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ]
 ]
 
@@ -106,6 +138,10 @@ numbers_matrix = [
 def fourier_transform(x):
     a = np.abs(np.fft.fft(x))
     return a/np.max(a)
+
+
+def standarise_features(x):
+    return (x - np.mean(x))/np.std(x)
 
 
 class Button(object):
@@ -121,7 +157,7 @@ class Button(object):
 
 
 class Adaline(object):
-    def __init__(self, no_of_input, number, learning_rate=0.01, iterations=2000, biased=False):
+    def __init__(self, no_of_input, number, learning_rate=0.01, iterations=10000, biased=False):
         self.no_of_input = no_of_input
         self.learning_rate = learning_rate
         self.iterations = iterations
@@ -133,27 +169,24 @@ class Adaline(object):
     def _add_bias(self, x):
         if self.biased:
             #x = np.hstack!!!
-            pass
+            return 0
         else:
             return x
-
-    def _standarise_features(self, x):
-        return (x - np.mean(x))/np.std(x)
-
+    
     def train(self, training_data_x, training_data_y):
-        preprocessed_training_data_x = self._standarise_features(training_data_x) # Zadanie: Standariza
+        #preprocessed_training_data_x = standarise_features(training_data_x) # Zadanie: Standariza
         for _ in range(self.iterations):
             e = 0
 
-            randomize_list = list(zip(preprocessed_training_data_x, training_data_y))
+            randomize_list = list(zip(training_data_x, training_data_y))
             random.shuffle(randomize_list)
-            preprocessed_training_data_x, training_data_y = zip(*randomize_list)
+            training_data_x, training_data_y = zip(*randomize_list)
 
-            for x, y in zip(preprocessed_training_data_x, training_data_y):
+            for x, y in zip(training_data_x, training_data_y):
                 x_extended = np.concatenate([x, fourier_transform(x)])
                 out = self.output(x)
-                self.weights[1:] += self.learning_rate * (y - out) * x_extended * self.derivative(x) # Zadanie: Co gdy mamy funkcje aktywacji sigmoidalną?
-                self.weights[0] += self.learning_rate * (y - out) * self.derivative(x)
+                self.weights[1:] += self.learning_rate * (y - out) * x_extended * self.derivative(x_extended) # Zadanie: Co gdy mamy funkcje aktywacji sigmoidalną?
+                self.weights[0] += self.learning_rate * (y - out)
                 e += 0.5 * (y - out)**2
             self.errors.append(e)
         plt.plot(range(len(self.errors)), self.errors, label=str(self.number))
@@ -166,26 +199,22 @@ class Adaline(object):
         #return x
 
     def output(self, input):
-        inp = self._standarise_features(input)
-        inp = np.concatenate([inp, fourier_transform(inp)])
-        summation = np.dot(self.weights[1:], inp) + self.weights[0]
+        inp = np.concatenate([input, fourier_transform(input)])
+        summation = self.activation(np.dot(self.weights[1:], inp) + self._add_bias(self.weights[0]))
         return summation
 
     def derivative(self, input):
-        inp = self._standarise_features(input)
-        inp = np.concatenate([inp, fourier_transform(inp)])
-        summation = self.activation(np.dot(self.weights[1:], inp) + self.weights[0])
-        return summation*(1-summation)
+        return self.activation(input)*(1-self.activation(input))
 
 
 def create_squares(squares):
-    for i in range(7):
+    for i in range(10):
         row = []
         x = 10
-        y = 10 + i*35
-        for j in range(7):
-            row.append(Button(x, y))
-            x += 35
+        y = 10 + i*25
+        for j in range(10):
+            row.append(Button(x, y, width=20, height=20))
+            x += 25
         squares.append(row)
 
 
@@ -228,7 +257,6 @@ def draw_squares(squares, screen, values):
                 pygame.draw.rect(screen, (180, 180, 180), (squares[row][col].x, squares[row][col].y, squares[row][col].width, squares[row][col].height), 0)
             else:
                 pygame.draw.rect(screen, (0, 80, 80), (squares[row][col].x, squares[row][col].y, squares[row][col].width, squares[row][col].height), 0)
-    #pygame.display.flip()
 
 
 def draw_buttons(buttons, screen):
@@ -246,30 +274,20 @@ def draw_buttons(buttons, screen):
 
 def main():
     main_size = width, height = 310, 590
-    choose_size = 310, 70
     training_inputs = [np.ravel(n) for n in numbers_matrix]
     perceptrons = []
 
     for i in range(10):
-        perceptrons.append(Adaline(7 * 7, number=i))
+        perceptrons.append(Adaline(10 * 10, number=i))
         labels = np.zeros(10)
         labels[i] = 1
         perceptrons[i].train(training_inputs, labels)
 
-
-    choose_algorithm_screen = pygame.display.set_mode(choose_size)
-    buttons = []
-    row = []
-    row.append(Button(10, 10, 90, text="SPLA"))
-    row.append(Button(110, 10, 90, text="PLA"))
-    row.append(Button(210, 10, 90, text="RPLA"))
-    buttons.append(row)
-    draw_buttons(buttons, choose_algorithm_screen)
     running = True
 
     buttons = []
     squares = []
-    values = np.zeros((7, 7))
+    values = np.zeros((10, 10))
     if running:
         main_screen = pygame.display.set_mode(main_size)
         create_squares(squares)
@@ -303,7 +321,7 @@ def main():
                             elif button.text == 'negation':
                                 values = np.copy(values) * (-1) + 1
                             elif button.text == 'clear':
-                                values = np.zeros((7, 7))
+                                values = np.zeros((10, 10))
                             elif button.text == 'random':
                                 for i in range(len(values)):
                                     for j in range(len(values[i])):
@@ -329,19 +347,41 @@ def main():
 
                 data_now = np.ravel(values)
                 output = ''
-                print("_________________")
+                system('cls')
+                print("Confidence:")
                 confidence = []
+                inp = standarise_features(data_now)
+                
+
                 for i in range(10):
-                    print(perceptrons[i].output(data_now))
                     confidence.append(perceptrons[i].output(data_now))
 
+                norm = np.linalg.norm(confidence)
+                confidence = confidence/norm
+                
                 output += str(np.argmax(confidence))
+                labels = []
+                data = []
+                normal_data = []
+                for i in range(10):
+                    data.append([ confidence[i] ])
+                    labels.append(str(i))
+                    normal_data.append([ confidence[i]*100 ])
+
                 buttons[6][0].text = 'result: ' + output
 
                 draw_squares(squares, main_screen, values)
                 draw_buttons(buttons, main_screen)
 
-
+                len_categories = 1
+                args = {'title': None, 'width': 50,
+                        'format': '{:<1.7f}', 'suffix': '', 'no_labels': False,
+                        'color': None, 'vertical': False, 'stacked': True,
+                        'different_scale': False, 'calendar': False,
+                        'start_dt': None, 'custom_tick': '', 'delim': '',
+                        'verbose': False, 'version': False}
+                colors = [91, 94]
+                tg.stacked_graph(labels, data, normal_data, len_categories, args, colors)
 
 
 if __name__ == "__main__":
