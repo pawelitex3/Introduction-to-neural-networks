@@ -60,7 +60,7 @@ class Neural_Newtork(object):
     def __init__(self, eta = 0.005):
         self.input_size = 2
         self.output_size = 2
-        self.hidden_size = 10
+        self.hidden_size = 15
         self.eta = eta
         self.weights_1 = np.random.randn(self.input_size, self.hidden_size) - 0.5
         self.weights_2 = np.random.randn(self.hidden_size, self.output_size) - 0.5
@@ -125,7 +125,7 @@ for(x, y) in examples[1]:
 
 plt.savefig('examples_1.png')
 
-window_size = width, height = 700, 500
+window_size = width, height = 600, 500
 window = pygame.display.set_mode(window_size)
 
 window.fill((255, 255, 255))
