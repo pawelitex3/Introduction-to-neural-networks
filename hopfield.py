@@ -6,11 +6,13 @@ import random
 pygame.init()
 numbers = [str(i+1) for i in range(20)]
 
+print(np.version.version)
+
 class HopfieldNewtork(object):
   def __init__(self, N):
     self.N = N
     self.weights = np.zeros((self.N, self.N))
-    self.iterations = 10000
+    self.iterations = 15000
 
   def little_dynamics(self, state):
     #Zadanie domowe!
@@ -78,7 +80,7 @@ def create_buttons(buttons):
     row.append(Button(10, 620, 80, 30, 'run'))
     row.append(Button(100, 620, 80, 30, 'clear'))
     row.append(Button(190, 620, 80, 30, 'noise'))
-    row.append(Button(280, 620, 80, 30, 'square'))
+    row.append(Button(280, 620, 80, 30, 'negative'))
     for i in range(10):
         row.append(Button(10+i*60, 660, 50, 30, str(i+1)))
 
@@ -101,16 +103,16 @@ def draw_buttons(buttons, screen):
 def create_points(points, image):
     image_copy = np.copy(image)
     for i in range(len(image)):
-        points.append(Point(10+(i%40)*15, 10+(i//40)*15, (image_copy[i], image_copy[i], image_copy[i])))
+        points.append(Point(10+(i%50)*12, 10+(i//50)*12, (image_copy[i], image_copy[i], image_copy[i])))
 
 
 def draw_image(screen, points):
-    for i in range(1600):
+    for i in range(2500):
         #print(points[i].color)
         if points[i].color == (0, 0, 0):
-            pygame.draw.rect(screen, np.array(points[i].color)+70, (points[i].x, points[i].y, 12, 12), 0)
+            pygame.draw.rect(screen, np.array(points[i].color)+70, (points[i].x, points[i].y, 10, 10), 0)
         else:
-            pygame.draw.rect(screen, np.array(points[i].color), (points[i].x, points[i].y, 12, 12), 0)
+            pygame.draw.rect(screen, np.array(points[i].color), (points[i].x, points[i].y, 10, 10), 0)
 
 
 window_size = width, height = 620, 740
@@ -118,12 +120,12 @@ window = pygame.display.set_mode(window_size)
 window.fill((0, 0, 0))
 
 white = []
-for i in range(1600):
+for i in range(2500):
     white.append(255)
 
 
 images = []
-for i in range(4):
+for i in range(3):
     filename = str(i+1) + ".png"
     img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
     ret, binary_img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
@@ -150,7 +152,7 @@ for image in images:
     image[image == 0] = 1
     image[image == 255] = -1
 
-h = HopfieldNewtork(1600)
+h = HopfieldNewtork(2500)
 h.training(images)
 
 while running:
@@ -184,7 +186,7 @@ while running:
                                 pygame.display.flip()
                             elif button.text == 'noise':
                                 number_of_changes = random.randint(50, 100)
-                                cells = random.sample(range(1600), number_of_changes)
+                                cells = random.sample(range(2500), number_of_changes)
                                 for cell in cells:
                                     current_points[cell] = current_points[cell]*(-1)
                                 current_points[current_points == 1] = 0
@@ -196,11 +198,16 @@ while running:
                                 current_points[current_points == 0] = 1
                                 current_points[current_points == 255] = -1
                                 pygame.display.flip()
-                            elif button.text == 'square':
-                                points = []
-                                window.fill((0, 0, 0))
-                                draw_square(window, points)
+                            elif button.text == 'negative':
+                                current_points *= (-1)
+                                current_points[current_points == 1] = 0
+                                current_points[current_points == -1] = 255
+                                displaying_points = []
+                                create_points(displaying_points, current_points)
+                                draw_image(window, displaying_points)
                                 draw_buttons(buttons, window)
+                                current_points[current_points == 0] = 1
+                                current_points[current_points == 255] = -1
                                 pygame.display.flip()
                             elif button.text in numbers:
                                 number = int(button.text)-1
