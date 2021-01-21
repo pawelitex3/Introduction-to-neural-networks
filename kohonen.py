@@ -165,7 +165,7 @@ while running:
                                 k = Kohonen(20, 20, 2)
                                 #k.som += [width/2, height/2]
                                 k.som *= [width, width]
-                                for t in range(5000):
+                                for t in range(2000):
                                     window.fill((0, 0, 0))
                                     k.train(points)
                                     k.draw(window)
